@@ -8,68 +8,45 @@ func main() {
 
 func gridGame(grid [][]int) int {
 	n := len(grid[0])
-	secondScore := 0
-	grid1 := make([]int, n)
-	grid2 := make([]int, n)
-	movedDown := false
 
+	// Use prefix sums to avoid repeated summations
+	topSum := make([]int64, n+1) // Using int64 to prevent potential overflow
+	bottomSum := make([]int64, n+1)
+
+	// Calculate prefix sums
 	for i := 0; i < n; i++ {
-		overLap := 0
-		if !movedDown {
-			overLap = grid[0][i]
-		}
-		grid1Sum := sumArr(&grid[0], i)
-		grid2Sum := sumArr(&grid[1], i) + overLap
-
-		if grid1Sum >= grid2Sum && !movedDown {
-			grid1[i] = 0
-			grid2[i] = grid[1][i]
-			continue
-		}
-
-		if movedDown {
-			grid1[i] = grid[0][i]
-			grid2[i] = 0
-		} else {
-			movedDown = true
-			grid1[i] = 0
-			grid2[i] = 0
-		}
+		topSum[i+1] = topSum[i] + int64(grid[0][i])
+		bottomSum[i+1] = bottomSum[i] + int64(grid[1][i])
 	}
 
-	movedDown = false
+	fmt.Println("topSum", topSum)
+	fmt.Println("bottomSum", bottomSum)
 
+	result := int64(1<<63 - 1) // MaxInt64
 	for i := 0; i < n; i++ {
-		overLap := 0
-		if !movedDown {
-			overLap = grid1[i]
-		}
-		grid1Sum := sumArr(&grid1, i)
-		grid2Sum := sumArr(&grid2, i) + overLap
-
-		if grid1Sum >= grid2Sum && !movedDown {
-			secondScore = secondScore + grid1[i]
-			continue
-		}
-
-		if movedDown {
-			secondScore = secondScore + grid2[i]
-		} else {
-			movedDown = true
-			secondScore = secondScore + grid2[i] + grid1[i]
-		}
+		// For each possible turning point:
+		// - Top right sum: topSum[n] - topSum[i+1]
+		// - Bottom left sum: bottomSum[i]
+		secondRobotScore := max(
+			topSum[n]-topSum[i+1], // Remaining top path
+			bottomSum[i],          // Used bottom path
+		)
+		result = min(result, secondRobotScore)
 	}
 
-	return secondScore
+	return int(result)
 }
 
-func sumArr(arr *[]int, index int) int {
-	sum := 0
-	for i, val := range *arr {
-		if i >= index {
-			sum = sum + val
-		}
+func max(a, b int64) int64 {
+	if a > b {
+		return a
 	}
+	return b
+}
 
-	return sum
+func min(a, b int64) int64 {
+	if a < b {
+		return a
+	}
+	return b
 }
