@@ -19,9 +19,6 @@ func gridGame(grid [][]int) int {
 		bottomSum[i+1] = bottomSum[i] + int64(grid[1][i])
 	}
 
-	fmt.Println("topSum", topSum)
-	fmt.Println("bottomSum", bottomSum)
-
 	result := int64(1<<63 - 1) // MaxInt64
 	for i := 0; i < n; i++ {
 		// For each possible turning point:
