@@ -41,7 +41,7 @@ func Test1765(t *testing.T) {
 		for i, row := range result {
 			for j, cell := range row {
 				if cell != test.expected[i][j] {
-					t.Errorf("expected %d, but got %d", test.input[i][j], cell)
+					t.Errorf("expected %d, but got %d", test.expected[i][j], cell)
 				}
 			}
 		}
