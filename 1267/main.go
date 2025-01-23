@@ -7,31 +7,33 @@ func main() {
 }
 
 func countServers(grid [][]int) int {
-	count := 0
-	rows := make(map[int]int)
-	cols := make(map[int]int)
+	if len(grid) == 0 || len(grid[0]) == 0 {
+		return 0
+	}
 
-	for i, row := range grid {
-		for j, val := range row {
-			if val == 1 {
-				if rows[i] == 1 {
-					count = count + 2
-				}
-				if rows[i] > 1 {
-					count++
-				}
-				rows[i] = rows[i] + 1
+	m, n := len(grid), len(grid[0])
+	rowCount := make([]int, m)
+	colCount := make([]int, n)
 
-				if cols[j] == 1 {
-					count = count + 2
-				}
-				if cols[j] > 1 {
-					count++
-				}
-				cols[j] = rows[j] + 1
+	// Count servers in each row and column
+	for i := 0; i < m; i++ {
+		for j := 0; j < n; j++ {
+			if grid[i][j] == 1 {
+				rowCount[i]++
+				colCount[j]++
 			}
 		}
 	}
 
-	return count
+	// Count servers that can communicate
+	result := 0
+	for i := 0; i < m; i++ {
+		for j := 0; j < n; j++ {
+			if grid[i][j] == 1 && (rowCount[i] > 1 || colCount[j] > 1) {
+				result++
+			}
+		}
+	}
+
+	return result
 }
