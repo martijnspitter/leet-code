@@ -21,6 +21,17 @@ func Test802(t *testing.T) {
 			},
 			expected: []int{2, 4, 5, 6},
 		},
+		{
+			name: "Test 2",
+			input: [][]int{
+				{1, 2, 3, 4},
+				{1, 2},
+				{3, 5},
+				{0, 4},
+				{},
+			},
+			expected: []int{4},
+		},
 	}
 
 	for _, test := range tests {
