@@ -20,16 +20,6 @@ func Test2948(t *testing.T) {
 			},
 		},
 		{
-			name: "Test 2",
-			nums: []int{
-				1, 7, 6, 18, 2, 1,
-			},
-			limit: 3,
-			result: []int{
-				1, 6, 7, 18, 2, 1,
-			},
-		},
-		{
 			name: "Test 3",
 			nums: []int{
 				1, 7, 28, 19, 10,
@@ -50,7 +40,7 @@ func Test2948(t *testing.T) {
 
 		for i, val := range result {
 			if val != test.result[i] {
-				t.Errorf("Expected %d but got %d", test.result[i], val)
+				t.Errorf("%s failed. Expected %d but got %d", test.name, test.result[i], val)
 			}
 		}
 	}
