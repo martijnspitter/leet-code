@@ -1,6 +1,9 @@
 package main
 
-import "testing"
+import (
+	"fmt"
+	"testing"
+)
 
 func Test1(t *testing.T) {
 	tests := []struct {
@@ -36,10 +39,14 @@ func Test1(t *testing.T) {
 			t.FailNow()
 		}
 
-		for i, val := range output {
-			if val != test.output[i] {
-				t.Errorf("%s failed. Expected %d but got %d", test.name, test.output[i], val)
-			}
+		sum := 0
+
+		for _, val := range output {
+			sum = sum + test.input[val]
+		}
+		if sum != test.target {
+			fmt.Println(output)
+			t.Errorf("%s failed. Expected %d but got %d", test.name, test.target, sum)
 		}
 	}
 }
