@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strconv"
-	"strings"
 )
 
 func main() {
@@ -16,54 +14,47 @@ type ListNode struct {
 }
 
 func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
-	l1String := traverse(l1)
-	l2String := traverse(l2)
+	carry := 0
+	list := &ListNode{}
+	cur := list
 
-	sum := sum(l1String, l2String)
-
-	var list *ListNode
-
-	for _, val := range sum {
-		list = &ListNode{
-			Val:  val,
-			Next: list,
+	for l1 != nil || l2 != nil {
+		val1 := 0
+		val2 := 0
+		if l1 != nil {
+			val1 = l1.Val
+		}
+		if l2 != nil {
+			val2 = l2.Val
 		}
 
-	}
+		sum, newCarry := getSum(val1, val2, carry)
+		carry = newCarry
 
-	return list
-}
-
-func traverse(l *ListNode) string {
-	val := fmt.Sprintf("%d", l.Val)
-
-	if l.Next == nil {
-		return val
-	}
-
-	return traverse(l.Next) + val
-}
-
-func sum(l1String, l2String string) []int {
-	l1num, err := strconv.Atoi(l1String)
-	if err != nil {
-		return nil
-	}
-	l2num, err := strconv.Atoi(l2String)
-	if err != nil {
-		return nil
-	}
-
-	sum := fmt.Sprintf("%d", l1num+l2num)
-	res := []int{}
-	strings := strings.Split(sum, "")
-	for _, s := range strings {
-		n, err := strconv.Atoi(s)
-		if err != nil {
-			continue
+		cur.Next = &ListNode{
+			Val: sum,
 		}
-		res = append(res, n)
+
+		cur = cur.Next
+
+		if l1 != nil {
+			l1 = l1.Next
+		}
+		if l2 != nil {
+			l2 = l2.Next
+		}
 	}
 
-	return res
+	if carry == 1 {
+		cur.Next = &ListNode{
+			Val: 1,
+		}
+	}
+
+	return list.Next
+}
+
+func getSum(val1, val2, carry int) (sum, newCarry int) {
+	total := val1 + val2 + carry
+	return total % 10, total / 10
 }
