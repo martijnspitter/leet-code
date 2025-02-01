@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"strings"
 )
 
 func main() {
@@ -10,17 +9,20 @@ func main() {
 }
 
 func lengthOfLongestSubstring(s string) int {
-	max := 0
-	current := ""
-	for _, char := range strings.Split(s, "") {
-		if strings.Contains(current, char) {
-			if len(current) > max {
-				max = len(current)
-			}
-			current = char
-		} else {
-			current = current + char
+	maxLength := 0
+	left := 0
+	chars := make(map[rune]int)
+
+	for right, char := range s {
+		if index, ok := chars[char]; ok && index >= left {
+			left = index + 1
+		}
+		chars[char] = right
+		length := right - left + 1
+		if length > maxLength {
+			maxLength = length
 		}
 	}
-	return max
+
+	return maxLength
 }
